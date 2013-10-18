@@ -1,0 +1,3 @@
+1.1.0
+Fixed to support new youtube interface through changes in link finding methods.
+Also updated youtube-dl to newest version

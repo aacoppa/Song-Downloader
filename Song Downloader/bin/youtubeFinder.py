@@ -219,11 +219,11 @@ def compareTitles(possibleTitles, titles, string, times, song):
 def lookupYoutube(string, song, pick = True):
 	#Make it a proper search link
         words = string.rsplit(" ")
-        link = "http://www.youtube.com/results?client=safari&rls=en&q="
+        link = "http://www.youtube.com/results?search_query="
         for each in words:
          	link += each + "+"
         link = link.rstrip('+') #Get rid of the pesky extra +
-        link += "&oe=UTF-8&um=1&ie=UTF-8&sa=N&tab=w1" #Add the ending part
+#          link += "&oe=UTF-8&um=1&ie=UTF-8&sa=N&tab=w1" #Add the ending part
         page = urllib2.urlopen(link)
 	data = page.read()
         currLine = "" #will hold the current tag line
@@ -236,6 +236,7 @@ def lookupYoutube(string, song, pick = True):
 	times = []
 	#NOTE: Read through in a byte by byte manner
 	currTime = ""
+        sameLink = True
  	inTime = False
         for line in data:
 		if(inTime):
@@ -247,7 +248,7 @@ def lookupYoutube(string, song, pick = True):
 				#print(currTime)
 				try:
 					Time = int(currTime)
-				#	print(Time)
+				        #print(Time)
 					Time = (Time % 100) + ((Time // 100) * 60) #In seconds
 				except:
 					Time = 0
@@ -259,21 +260,31 @@ def lookupYoutube(string, song, pick = True):
                 if(inTag):
                         currLine += line
                 if(inVideo):
-                        vidLink += line
+                       # vidLink += line
+                       pass
                 if(line == ">"):
                         if(inVideo):
-                                watch = "youtube.com"+vidLink[vidLink.find('/watch'):]
-                                watch = watch.rstrip('">')
-                                title = vidLink[vidLink.find("title=") + 7:vidLink.find("data-sessionlink") - 2]
-                      		
-				links.append(watch)
-                                titles.append(title)
+                                watch = "youtube.com"
+                                l = vidLink[vidLink.find('/watch'):vidLink.rfind('"')]
+                                watch += l
+                                #watch = watch.rstrip('">')
+                                #print(vidLink)
+                                title = vidLink[vidLink.find("title=") + 7:vidLink.find("data-session") - 10]
+                                if(sameLink == False):
+
+				    links.append(watch)
+                                    #print(title)
+                                    #print(watch)
+                                    titles.append(title)
+                                    num += 1
+                                sameLink = not sameLink
                                 inVideo = False
                                 vidLink = ""
-                                num += 1
 			#Once we reach the end of the line we look to see if it was a vid link
-                        if(currLine.find('h3 class="yt-lockup2-title"') != -1):
+                        if(currLine.find('href="/watch?v=') != -1):
+                                vidLink = currLine
 				#if it is!
+                                #print(currLine)
                                 inVideo = True
 			if(currLine.find('class="video-time"') != -1):
 				inTime = True
