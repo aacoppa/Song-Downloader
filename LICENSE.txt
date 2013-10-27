@@ -1,9 +1,0 @@
-Made by Aaron Coppa
-Copyright Aaron Coppa 2012
-Credits to originals owners and creators of:
-lame
-ffmpeg
-id3tag
-youtube-dl
-
-To be used and redistributed

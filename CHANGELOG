@@ -1,3 +1,5 @@
+1.1.1
+Made less like something a naive four year old made, aka removed any pre-combiled binaries, made a configure file, allowed for installation without id3tag. All around cleaner and more professional. Minor code changes around tagging
+
 1.1.0
 Fixed to support new youtube interface through changes in link finding methods.
-Also updated youtube-dl to newest version

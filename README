@@ -1,9 +1,11 @@
-This is a command line utility to download music from youtube.
+Command line music downloading...
+Making life simpler for all users
 
-Updated to work with youtube updates!
+MAC OSX ONLY
 
-See the LICENSE file for license
-See the INSTRUCTIONS file for instructions
+Required to have ffmpeg, lame, youtube-dl installed... Links to the source of the above are located in INSTRUCTIONS
 
-YOU MAY DRAG THE ENCLOSING FOLDER TO THIS INTO THE TRASH AFTER YOU RUN INSTALL.COMMAND
-INSTRUCTIONS.txt can still be reached in Library/Application Support/Song Downloader
+id3tag will be used if installed as well
+
+Simply type in that tune that you've been yearning for and bang, its right there in your Music library.
+

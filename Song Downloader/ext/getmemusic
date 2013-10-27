@@ -1,0 +1,122 @@
+#!/bin/bash
+#Look for update, and if there is one
+#Prompt user to update
+~/Library/Application\ Support/Song\ Downloader/Dependencies/checkForUpdate
+#Help info
+if [ "$1" = "-h" -o "$1" = "--help" ]; then
+echo "Download Youtube Songs"
+echo "-noauto Don't automatically pick the song to download"
+echo "-nofill Don't fill out the Song and Artist tags"
+echo "Otherwise format should be:"
+echo "Example Song Name : Example Artist Who Wrote Song"
+exit 0
+fi
+
+#List to hold arguments for webSurf
+args=()
+#These two vals will be changed by the -nofill and -noauto arguments
+#All below is dealing with reading those arguments and the input
+fill=False
+noAuto=False
+#First check for the nofill/noauto argument
+for i in $@
+do
+if [ $i == "-nofill" ]; then
+fill=False
+fi
+if [ $i == "-noauto" ]; then
+noAuto=True
+fi
+done
+SongTitle=""
+Artist=""
+#Then reloop looking for the author, name
+#Note, nofill lets the user input in any format which is why we have to deal with it seperately
+if [ $fill = "True" ]; then
+#songNow is so that we read the song first, then the artist
+songNow="True"
+#Loop through args and add them to the proper spot
+for i in $@
+do
+if [ $i == ":" ]; then
+songNow="False"
+else
+#Add the word
+if [ $songNow = "True" ]; then
+SongTitle+=$i" "
+args+=$i" "
+else
+#In the artist spot
+if [ $i = "-nofill" -o $i = "-noauto" ]; then
+#Don't add flags to Artist
+:
+else
+Artist+=$i" "
+args+=$i" "
+fi
+fi
+fi
+#
+done
+#If its not fill
+else
+for i in $@
+do
+if [ $i = "-nofill" -o $i = "-noauto" ]; then
+#Don't add flags to word lists
+:
+else
+args+=$i" "
+fi
+done
+fi
+#Add an auto arg for youtubeFinder
+if [ $noAuto != "True" ]; then
+args+="-auto"
+fi
+
+#Here we get rid of an annoying trailing space charecter
+SongTitle=${SongTitle%" "}
+if [ $fill != "True" ]; then
+SongTitle="$args"
+fi
+#And then we fill a file with a link in this python call
+python ~/Library/Application\ Support/Song\ Downloader/Dependencies/youtubeFinder.py $args ":" $SongTitle
+fileContents=`cat /tmp/youtubelink.txt`
+#get the link
+link=""
+for line in $fileContents
+do
+link+=$line
+done
+#now link has the value of what was in the file
+if [ $link == "" ]; then
+	echo "Could not retrieve a valid link"
+	echo "Are you connected to the internet?"
+	echo "Maybe try the -noauto option, or check your spelling"
+	exit 0
+fi
+#This gets the youtube videos title
+VideoTitle=`youtube-dl --get-filename -o "%(title)s.%(ext)s" $link`
+
+#If the songtitle wasnt loaded before, load it now
+#Artist is set to unkown
+if [ $fill != "True" ]; then
+#Remove the trailing file type chars
+SongTitle=${VideoTitle%.*}
+Artist="Unknown"
+fi
+#Switch to where we want to download songs
+cd ~/Music/YoutubeSongs
+#Download the video!
+youtube-dl -o "$VideoTitle" "$link"
+echo "Converting to mp3..."
+#Convert it to mp3
+ffmpeg -i "$VideoTitle" -y -vn -ar 44100 -ac 2 -ab 192k -f mp3 "$SongTitle.mp3" &> /dev/null
+#echo "Filling out artist tags..."
+#id3tag -s"$SongTitle" "$SongTitle.mp3" &> /dev/null
+#id3tag -a"$Artist" "$SongTitle.mp3" &> /dev/null
+
+#Remove the video
+rm "$VideoTitle"
+echo "Finished"

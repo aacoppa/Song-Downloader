@@ -1,0 +1,37 @@
+Installation...
+install ffmpeg 
+http://www.ffmpeg.org/download.html
+
+install youtube-dl 
+http://rg3.github.io/youtube-dl/download.html
+
+install lame
+http://sourceforge.net/projects/lame/files/lame/3.99/
+
+Can also install id3tag for automatic tagging
+
+Then run:
+./configure
+sudo make
+
+DOWNlOAD ALBUMS:
+getmealbum "Album Name : Artist Name"
+
+DOWNLOAD SONGS:
+getmemusic "Song Name : Artist Name"
+
+If you don't know the Artists name exactly then you can use
+getmemusic -nofill 
+
+to not fill out the id3tags (Artist information) of the song
+
+If you don't want the youtube video to be automatically picked for you:
+getmemusic "Song Title : Artist Titile -noauto" 
+Which might be good for obscure songs
+
+Download a list of songs...
+Fill out Songs\ To\ Be\ Downloaded.txt on your Desktop and run:
+getmemusiclist
+
+IMPORTANT~~~~~~~~~~~
+All songs that are downloaded will go to a folder inside your Music folder named YoutubeSongs. To move to iTunes simply open iTunes, click File->Add To Library and select the YoutubeSongs folder

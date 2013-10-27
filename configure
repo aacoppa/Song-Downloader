@@ -1,0 +1,23 @@
+#!/bin/bash
+if [ -z `which youtube-dl` ]; then
+    echo "Missing youtube-dl, cannot install..."
+    exit   
+fi
+
+
+if [ -z `which ffmpeg` ]; then
+    echo "Missing ffmpeg, cannot install..."
+    exit   
+fi
+
+if [ -z `which lame` ]; then
+    echo "Missing lame, cannot install..."
+    exit   
+fi
+
+if [ -z `which lame` ]; then
+    echo "No id3tagger..."
+    echo "Installing automatic -nofill"
+    mv Song\ Downloader/ext/getmemusic Song\ Downloader/bin
+fi
+
